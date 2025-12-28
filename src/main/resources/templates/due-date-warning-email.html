@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Deadline Reminder</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            font-size: 15px;
+            color: #7f8c8d;
+            margin-top: 0;
+        }
+
+        .task-card {
+            border-radius: 8px;
+            border: 1px solid #ecf0f1;
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #fafafa;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #34495e;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #fff;
+        }
+
+        .priority-LOW {
+            background-color: #27ae60;
+        }
+
+        .priority-NORMAL {
+            background-color: #2980b9;
+        }
+
+        .priority-HIGH {
+            background-color: #f39c12;
+        }
+
+        .priority-URGENT {
+            background-color: #c0392b;
+        }
+
+        .task-detail {
+            margin-top: 12px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .task-detail span {
+            font-weight: 600;
+        }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 13px;
+            color: #95a5a6;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            .task-title {
+                font-size: 16px;
+            }
+
+            .task-detail {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Hello <span th:text="${firstName} + ' ' + ${lastName}">John Doe</span>,</h2>
+    <p class="subtitle">
+        This is a friendly reminder that you have some tasks with upcoming due dates. Please review the tasks below and make sure you're on track.
+    </p>
+
+    <div th:each="task : ${tasks}" class="task-card">
+        <div class="task-header">
+            <div class="task-title"
+                 th:text="${#strings.length(task.taskName) > 50} ? ${#strings.substring(task.taskName, 0, 50)} + '...' : ${task.taskName}">
+                Task Title
+            </div>
+
+            <div class="badge" th:text="${task.priority}" th:classappend="' badge priority-' + ${task.priority}">NORMAL</div>
+        </div>
+
+        <div class="task-detail">
+            <p><span>Due Date:</span> <span th:text="${#temporals.format(task.dueDate, 'dd MMM yyyy HH:mm')}">01 Jan 2025 10:00</span></p>
+            <p><span>Status:</span> <span th:text="${task.status}">PENDING</span></p>
+            <p th:if="${task.description}"><span>Description:</span> <span th:text="${task.description}">Task details here...</span></p>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2025 EduSystem CRM | Automated Reminder Service<br/>
+        This message was generated automatically. Please do not reply.
+    </div>
+</div>
+
+</body>
+</html>

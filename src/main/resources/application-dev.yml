@@ -1,0 +1,17 @@
+#spring:
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/email_sender
+#    username: postgres
+#    password: 1234
+#
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#    database: postgresql
+#    properties:
+#      hibernate:
+#        format_sql: true
+
+server:
+  port: 9091
