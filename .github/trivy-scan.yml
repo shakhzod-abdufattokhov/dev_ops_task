@@ -1,0 +1,55 @@
+name: Trivy Docker Image Scan
+
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+
+permissions:
+  contents: read
+  security-events: write
+
+
+jobs:
+  trivy-scan:
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+
+      - name: Build Docker image
+        run: docker build -t myapp:${{ github.sha }} .
+
+
+      - name: Trivy Scan (table output)
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          scan-type: image
+          image-ref: myapp:${{ github.sha }}
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          format: table
+
+
+      - name: Trivy Scan (SARIF)
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          scan-type: image
+          image-ref: myapp:${{ github.sha }}
+          format: sarif
+          output: trivy-results.sarif
+
+
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
