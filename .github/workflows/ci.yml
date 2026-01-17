@@ -29,5 +29,5 @@ jobs:
 
       - name: Push Image
         run: |
-          docker tag emailsender:${{ github.sha }} yourdockerhub/emailsender:${{ github.sha }}
-          docker push yourdockerhub/emailsender:${{ github.sha }}
+          docker tag emailsender:${{ github.sha }} shakhzodjon/emailsender:${{ github.sha }}
+          docker push shakhzodjon/emailsender:${{ github.sha }}
