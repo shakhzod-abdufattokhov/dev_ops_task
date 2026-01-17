@@ -1,24 +1,24 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: devops-assignment
-  namespace: argo-cd
+  name: emailsender
+  namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
 
   source:
-    repoURL: https://github.com/asadbek-abdinazarov/devops-assignment.git
+    repoURL: https://github.com/shakhzod-abdufattokhov/dev_ops_task
     targetRevision: main
-    path: helm/devops-assignment
+    path: helm/emailsender
     helm:
       valueFiles:
         - values.yaml
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: devops-assignment
+    namespace: default
 
   syncPolicy:
     automated:
