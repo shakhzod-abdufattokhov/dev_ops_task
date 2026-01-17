@@ -18,3 +18,21 @@ serviceMonitor:
   path: /actuator/prometheus
   interval: 30s
   scrapeTimeout: 10s
+
+prometheus:
+  enabled: false
+  namespace: monitoring
+  replicaCount: 1
+  retention: 7d
+  image:
+    repository: prom/prometheus
+    tag: v2.52.0
+    pullPolicy: IfNotPresent
+  service:
+    port: 9090
+    targetPort: 9090
+    type: ClusterIP
+  scrapeInterval: 15s
+  scrapeTimeout: 10s
+  resources: {}
+
