@@ -17,11 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmailController {
     private final EmailService emailService;
 
-    @PostMapping
+    @PostMapping("/send")
     public ResponseEntity<String> sendEmail(@RequestBody User user) throws MessagingException {
         emailService.sendEmailForNewUser(user);
         return ResponseEntity.ok("Email sended");
     }
+
 
     @PostMapping("/warning")
     public ResponseEntity<String> sendEmailWarning(@RequestBody DueDateWarningEmailDto warningEmailDto) throws MessagingException {
