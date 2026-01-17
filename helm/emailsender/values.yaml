@@ -1,5 +1,9 @@
 replicaCount: 2
 
+app:
+  name: emailsender
+  namespace: default
+
 image:
   repository: shakhzodjon/emailsender
   tag: "latest"
