@@ -3,7 +3,8 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ include "emailsender.fullname" . }}
-  namespace: {{ .Values.app.namespace }}
+  namespace: kubectl port-forward -n monitoring svc/monitoring-kube-prometheus-prometheus 9090:9090
+{{ .Values.app.namespace }}
   labels:
     {{- include "emailsender.labels" . | nindent 4 }}
 spec:
