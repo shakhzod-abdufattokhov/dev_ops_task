@@ -13,7 +13,8 @@ spec:
       - {{ .Values.app.namespace }}
   selector:
     matchLabels:
-      {{- include "emailsender.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/name: emailsender
+      app.kubernetes.io/instance: emailsender
   endpoints:
     - port: http
       path: {{ .Values.serviceMonitor.path }}
