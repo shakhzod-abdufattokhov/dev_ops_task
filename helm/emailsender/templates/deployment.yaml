@@ -18,3 +18,10 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 9091
+          volumeMounts:
+            - name: h2-data
+              mountPath: /data
+      volumes:
+        - name: h2-data
+          persistentVolumeClaim:
+            claimName: emailsender-h2-pvc

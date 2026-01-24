@@ -24,7 +24,6 @@ public class EmailController {
     }
 
 
-
     @PostMapping("/warning")
     public ResponseEntity<String> sendEmailWarning(@RequestBody DueDateWarningEmailDto warningEmailDto) throws MessagingException {
         emailService.sendNotificationToUserForTask(warningEmailDto);
