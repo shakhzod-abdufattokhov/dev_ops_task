@@ -1,8 +1,10 @@
 package epam.report.emailsender.controller;
 
+import epam.report.emailsender.metrics.ApiHealthMetrics;
 import epam.report.emailsender.model.AgricultureCompany;
 import epam.report.emailsender.repository.AgricultureRepository;
 import io.micrometer.core.annotation.Timed;
+import io.micrometer.core.instrument.Timer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class AgricultureCompanyController {
 
     private final AgricultureRepository repository;
+    private final ApiHealthMetrics metrics;
 
     @Timed(
             value = "agriculture_api_create_latency",
@@ -35,9 +38,23 @@ public class AgricultureCompanyController {
     )
     @GetMapping("/get/{id}")
     public AgricultureCompany get(@PathVariable Long id) {
-        AgricultureCompany company = repository.findById(id).orElseThrow();
 
-        log.info("Agriculture company fetched successfully, id={}", id);
-        return company;
+        metrics.recordRequest();
+        Timer.Sample sample = metrics.startTimer();
+
+        try {
+            AgricultureCompany company = repository.findById(id).orElseThrow();
+            metrics.markUp();
+            return company;
+
+        } catch (Exception ex) {
+            metrics.recordError();
+            metrics.markDown();
+            throw ex;
+
+        } finally {
+            metrics.stopTimer(sample);
+        }
     }
+
 }
