@@ -20,26 +20,5 @@ public class ApiLoggingInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    @Override
-    public void afterCompletion(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Object handler,
-            Exception ex
-    ) {
-        long duration =
-                System.currentTimeMillis() - (long) request.getAttribute(START_TIME);
-
-        LocalDateTime.now();
-        log.info(
-                "HTTP_REQUEST time={} method={} uri={} status={} client_ip={} duration_ms={}",
-                LocalDateTime.now(),
-                request.getMethod(),
-                request.getRequestURI(),
-                response.getStatus(),
-                request.getRemoteAddr(),
-                duration
-        );
-    }
 }
 

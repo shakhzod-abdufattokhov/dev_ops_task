@@ -1,5 +1,6 @@
 package epam.report.emailsender.controller;
 
+import epam.report.emailsender.metrics.AgricultureMetrics;
 import epam.report.emailsender.metrics.ApiHealthMetrics;
 import epam.report.emailsender.model.AgricultureCompany;
 import epam.report.emailsender.repository.AgricultureRepository;
@@ -17,6 +18,7 @@ public class AgricultureCompanyController {
 
     private final AgricultureRepository repository;
     private final ApiHealthMetrics metrics;
+    private final AgricultureMetrics agricultureMetrics;
 
     @Timed(
             value = "agriculture_api_create_latency",
@@ -25,10 +27,26 @@ public class AgricultureCompanyController {
     )
     @PostMapping
     public Long create(@RequestBody AgricultureCompany company) {
-        AgricultureCompany saved = repository.save(company);
+        metrics.recordRequest();
+        agricultureMetrics.incrementGet();
+        Timer.Sample sample = metrics.startTimer();
 
-        log.info("Agriculture company created successfully, id={}", saved.getId());
-        return saved.getId();
+        try {
+            AgricultureCompany saved = repository.save(company);
+            metrics.markUp();
+            agricultureMetrics.incrementCreate();
+            log.info("Agriculture company created successfully, id={}", saved.getId());
+            return saved.getId();
+
+        } catch (Exception ex) {
+            metrics.recordError();
+            metrics.markDown();
+            throw ex;
+
+        } finally {
+            metrics.stopTimer(sample);
+        }
+
     }
 
     @Timed(
@@ -40,6 +58,7 @@ public class AgricultureCompanyController {
     public AgricultureCompany get(@PathVariable Long id) {
 
         metrics.recordRequest();
+        agricultureMetrics.incrementGet();
         Timer.Sample sample = metrics.startTimer();
 
         try {
